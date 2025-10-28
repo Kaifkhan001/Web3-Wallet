@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import initDB, { getItem } from "../utils/DbInteration";
-import { privateKey, publicKey } from "../utils/ConstValues";
+import { WalletConst } from "../utils/ConstValues";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const Home = () => {
-    const [DbPublicKey, setDbPublicKey] = useState('');
-    const [hashedPrivateKey, setHashedPrivateKey] = useState('');
+    const [wallet, setWallet] = useState('');
     const navigate = useNavigate();
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -14,12 +13,8 @@ const Home = () => {
 
    const loadKeys = async() => {
        try {
-        const key = await getItem(publicKey) as string;
-       setDbPublicKey(key);
-       const privKey = await getItem(privateKey) as string;
-       setHashedPrivateKey(privKey);
-       console.log("Public key from the indexedDB:- ", key);
-       console.log("Hashed Private key:- ", privKey);
+       const wall = await getItem(WalletConst) as string;
+       if(wall) setWallet(wall);
        setIsLoading(false);
        } catch (error: unknown) {
         console.log("Some erorr got while fetching data from the db", error);
@@ -46,9 +41,9 @@ const Home = () => {
             return;
         }
 
-        if(DbPublicKey && hashedPrivateKey) navigate('/wallet');
+        if(wallet) navigate('/wallet');
         else navigate('/create-wallet');
-     }, [isLoading, DbPublicKey, hashedPrivateKey, error]);
+     }, [isLoading, wallet, error]);
       
     
      

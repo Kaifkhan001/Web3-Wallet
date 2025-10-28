@@ -8,10 +8,13 @@ import SeedPhraseValidate from './components/SeedPhraseValidate';
 import { WalletProvider } from './context/WalletContext';
 import CreatePassword from './components/CreatePassword';
 import CreateWallet from './components/CreateWallet';
-import Test from './components/test';
+// import AddWallet from './components/AddWallet';
 
 function App() {
 
+  // const handleClick = () => {
+  //   console.log("Clicked");
+  // }
   return (
    <WalletProvider>
    <BrowserRouter>
@@ -22,7 +25,7 @@ function App() {
           <Route path='/seed-phrase/validate' element={<SeedPhraseValidate />} />
           <Route path='/create-password' element={<CreatePassword />} />
           <Route path='/wallet' element={<Wallet />}/>
-          <Route path='/test' element={<Test />} />
+          {/* <Route path='/test' element={<AddWallet />}/> */}
       </Routes>
    </BrowserRouter>
    </WalletProvider>
@@ -30,3 +33,5 @@ function App() {
 }
 
 export default App
+
+// isVisible={true} onclick={handleClick} 

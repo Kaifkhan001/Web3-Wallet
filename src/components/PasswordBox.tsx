@@ -15,6 +15,7 @@ export default function PasswordGate({ onClose }: { onClose: () => void }) {
    (async() => {
     try {
         const password = await getItem(passwordConst);
+        console.log("Password: ", password);
         passFromDb.current = password as string;
         console.log("Password got from indexedDB:- ", password);
     } catch (error) {

@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import useWallet from "../context/UseWallet";
 import MnemonicsBox from "./MnemonicsBox";
 import Navbar from "./Navbar";
+import { setItem } from "../utils/DbInteration";
+import { MnemonicsConst } from "../utils/ConstValues";
 
 
 const SeedPhrase = () => {
@@ -12,10 +14,16 @@ const SeedPhrase = () => {
     const { setMnemonics, mnemonics } = useWallet();
     const [isTrue, setIsTrue] = useState(false);
     
-    useEffect(() => {
+   useEffect(() => {
+     (async() => {
     const mnemonic = generateMnemonic();
     setMnemonics(mnemonic);
-    }, []);
+    console.log("Mnemonics value in seed phrase:- ", mnemonic);
+    await setItem(MnemonicsConst, mnemonic)
+      console.log("Successfully");
+     })()
+   }, []);
+   
 
     const handleClick = () => {
        navigate('/seed-phrase/validate');

@@ -5,50 +5,59 @@ import MoneyControl from './MoneyControl'
 import Tokens from './Tokens'
 import PasswordGate from './PasswordBox'
 import initDB, { getItem, setItem } from '../utils/DbInteration'
-import { passwordConst, privateKey, publicKey,  } from '../utils/ConstValues'
+import { MnemonicsConst, passwordConst, WalletConst,  } from '../utils/ConstValues'
 import ReloadPage from './ReloadPage'
-import useWallet from '../context/UseWallet'
+import useWallet, { type Wallets } from '../context/UseWallet'
 import CreateSolAccount from '../utils/createSolAccount'
-import encryptKey from '../utils/encryptKey'
+import { toast } from 'sonner'
 
 const Wallet = () => {
-  const { mnemonics } = useWallet();
+  const { mnemonics, wallets, currentChain, setWallets, setMnemonics } = useWallet();
   const [IsOpen, setIsOpen] = useState(true);
   const [error, setError] = useState(false);
-  const [dbPublicKey, setDbPublicKey] = useState('');
-  const [hashedPrivateKey, setHashedPrivateKey] = useState('');
-  const [currentAccountNo, setcurrentAccountNo] = useState(1);
   const passwordRef = useRef('');
   
-  const loadKeys = async() => {
-    const key = await getItem(publicKey) as string;
-    setDbPublicKey(key);
-    const privKey = await getItem(privateKey) as string;
-    setHashedPrivateKey(privKey);
-    console.log("Public key from the indexedDB:- ", key);
-    console.log("Hashed Private key:- ", privKey);
+  const loadWallet = async() => {
+    try {
+      const wall: Wallets | null = await getItem(WalletConst);
+      if(!wall) return;
+      setWallets(wall);
+      console.log("Loaded from DB (wall):- ", wall);
+    } catch (error) {
+      setError(true);
+      console.log("Error loading wallets data", error);
+      toast.error("Error loading wallet data");
+      return;
+    }
   }
   useEffect(() => {
    (async() => {
     initDB();
-   loadKeys();
-   passwordRef.current = await getItem(passwordConst) as string
+   loadWallet();
+   passwordRef.current = await getItem(passwordConst) as string;
+   const res = await getItem(MnemonicsConst) as string | null;
+   if(res) setMnemonics(res);
    })()
 
   }, []);
+  
+  
 
   useEffect(() => {
     (async() => {
-      if(!hashedPrivateKey || !publicKey){
-      console.log("Mnemonics value:- ", mnemonics);
-      const account = CreateSolAccount(mnemonics, currentAccountNo);
-      setDbPublicKey(account.publicKey);
-      await setItem(publicKey, account.publicKey);
-      const enc = await encryptKey(account.secretKeyBase58,passwordRef.current);
-      await setItem(privateKey, enc);
+      console.log("Wallet if condition:- ", wallets[currentChain].length == 0);
+      console.log("Mnemonics value:- ", mnemonics.toString());
+      if(wallets[currentChain].length == 0 && mnemonics){
+      CreateSolAccount({ password: passwordRef.current, wallets, currentChain, setWallets, mnemonics });
+      await setItem(WalletConst, wallets);
     }
     })()
-  }, [])
+  }, [mnemonics]);
+
+  useEffect(() => {
+    console.log("Wallet values:- ",wallets);
+  }, [wallets])
+  
   
 
   const handleReloadClick = () => {
@@ -66,7 +75,7 @@ const Wallet = () => {
   
 
   return (
-    <div className='text-4xl text-gray-300'>
+    <div className='text-4xl text-gray-300 min-h-screen pb-8'>
       <Navbar isValid={true} />
       <BalanceCard />
       <MoneyControl />

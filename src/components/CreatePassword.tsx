@@ -5,11 +5,13 @@ import { toast } from 'sonner';
 import { setItem } from '../utils/DbInteration';
 import { passwordConst } from '../utils/ConstValues';
 import { useNavigate } from 'react-router-dom';
+import useWallet from '../context/UseWallet';
 
 const CreatePassword = () => {
     const [pass, setPass] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
     const navigate = useNavigate();
+    const { setPassword } = useWallet();
 
 
     const handleSubmit = async(e: FormEvent) => {
@@ -18,6 +20,7 @@ const CreatePassword = () => {
         toast.error("Password isn't matching");
         return;
     }
+    setPassword(pass);
     await setItem(passwordConst, pass)
     .then((res) => {
         console.log("Res of password saving process:- ", res);

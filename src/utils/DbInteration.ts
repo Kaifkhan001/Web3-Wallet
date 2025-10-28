@@ -24,25 +24,26 @@ export default async function initDB() : Promise<IDBDatabase>{
 }
 
 
-export async function setItem(id: string, value: string){
+export async function setItem<T>(id: string, value: T): Promise<void> {
    if(!db) await initDB();
    return new Promise((resolve, reject ) => {
       const tnx = db!.transaction('vault', 'readwrite');
-      const req = tnx.objectStore('vault').put({ id, value });
-      req.onsuccess = () => resolve('Successfully Inserted');
+      const req = tnx.objectStore('vault').put({ id, value: JSON.stringify(value) });
+      req.onsuccess = () => resolve();
       req.onerror = () => reject(tnx.error);
    });
 }
 
-export async function getItem(id: string){
+export async function getItem<T>(id: string): Promise<T | null>{
    if(!db) await initDB();
 
    return new Promise((resolve, reject) => {
       const tnx = db!.transaction('vault', 'readonly');
       const req = tnx.objectStore('vault').get(id);
+      
       req.onsuccess = () => {
          if(req.result){
-            resolve(req.result.value);
+            resolve(JSON.parse(req.result.value));
          }else{
             reject(new Error(`No record found for id: ${id}`))
          }
