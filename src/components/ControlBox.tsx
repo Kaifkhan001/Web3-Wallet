@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import React, { type ReactElement } from 'react'
+import  { type ReactElement } from 'react'
 
 const ControlBox = ({ text, icon } : {text : string, icon: ReactElement}) => {
   return (

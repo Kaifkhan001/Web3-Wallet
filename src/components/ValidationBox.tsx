@@ -1,4 +1,4 @@
-import React from 'react'
+
 
 const ValidationBox = ({validationArray, randomIndexValue, onClick, round} : { validationArray: string[], randomIndexValue: number, onClick: (value: string) => void, round: number}) => {
   return (

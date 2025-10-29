@@ -1,4 +1,4 @@
-import React from 'react'
+
 
 const ReloadPage = ({ handleClick }: { handleClick : () => void}) => {
   return (
