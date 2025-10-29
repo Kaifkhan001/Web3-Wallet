@@ -120,7 +120,7 @@ const AddWallet = ({ onClose, encprivateKey } : { onClose: () => void; encprivat
             </button>
           </form>
               <div
-                className="absolute top-3 right-1/2 text-gray-400 hover:text-white cursor-pointer  translate-x-[50%] text-xl font-semibold"
+                className="absolute top-3 right-1/2 text-gray-400 hover:text-white cursor-pointer  translate-x-[50%] text-xl font-semibold py-4"
               >
                 Private Key
               </div>
