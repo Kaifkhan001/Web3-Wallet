@@ -1,73 +1,88 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🔐 CryptoVault – A Web3-Based Secure Wallet
 
-Currently, two official plugins are available:
+"Mere paas khud ka Web3 wallet hai."
+– Hum bhi bana lenge. 😎
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+CryptoVault is a browser-based, fully client-side Web3 wallet built using React + Tailwind CSS, designed for maximum privacy, security, and control.
+No centralized server, no cloud storage, no compromises — your wallet lives only on your device.
 
-## React Compiler
+🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+🪙 Multi-Chain Support — Manage wallets for Solana, Ethereum, Polygon, and Bitcoin.
 
-## Expanding the ESLint configuration
+🔑 Secure Seed Phrase Generation — Your seed never leaves your device.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+🧠 HD Wallets — Hierarchical deterministic wallets with bip32, bip39, and hdnode.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+💾 Local Secure Storage — Stored in browser databases (not localStorage) for protection against XSS attacks.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+🎨 Modern UI — Built with Tailwind CSS and Framer Motion for smooth animations.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+⚡ Pure Frontend Architecture — No backend, no API dependencies.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+🧩 Tech Stack
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+React 19 + Vite
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Tailwind CSS
+
+Framer Motion
+
+Web3 Libraries
+
+ethers
+
+bitcoinjs-lib
+
+@solana/web3.js
+
+bip32, bip39
+
+ed25519-hd-key
+
+tweetnacl
+
+🧠 Installation & Run Locally
+
+# Clone the repository
+git clone https://github.com/Kaifkhan001/Web3-Wallet.git
+
+# Move into the project folder
+cd crypto-vault
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+The app will start running at:
+👉 https://localhost:5173
+
+🌐 Live Demo
+
+🔗 https://crypto.kaifkhan.site/
+
+🧱 Folder Structure
+
+crypto-vault/
+│
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── utils/
+│   ├── assets/
+│   └── App.jsx
+│
+├── public/
+│   └── favicon.svg
+│
+└── package.json
+
+
+📜 License
+
+This project is open-source and free to use.
+
+
+Built with ❤️ by Kaif Khan.
