@@ -59,7 +59,7 @@ const Home = () => {
             {isLoading ? (
                 <div className="flex items-center justify-center gap-2.5">
             <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="20" cy="20" r="15" stroke="#007bff" stroke-width="3" fill="none" stroke-dasharray="23.56" stroke-dashoffset="11.78">
+                <circle cx="20" cy="20" r="15" stroke="#007bff" strokeWidth="3" fill="none" strokeDasharray="23.56" strokeDashoffset="11.78">
                 <animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="1s" repeatCount="indefinite" />
                 </circle>
             </svg>

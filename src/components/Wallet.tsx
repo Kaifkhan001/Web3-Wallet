@@ -13,8 +13,9 @@ import { toast } from 'sonner'
 
 const Wallet = () => {
   const { mnemonics, wallets, currentChain, setWallets, setMnemonics } = useWallet();
-  const [IsOpen, setIsOpen] = useState(true);
+  // const [IsOpen, setIsOpen] = useState(true);
   const [error, setError] = useState(false);
+  const [isPasswordOpen, setIsPasswordOpen] = useState(true);
   const passwordRef = useRef('');
   
   const loadWallet = async() => {
@@ -22,7 +23,6 @@ const Wallet = () => {
       const wall: Wallets | null = await getItem(WalletConst);
       if(!wall) return;
       setWallets(wall);
-      console.log("Loaded from DB (wall):- ", wall);
     } catch (error) {
       setError(true);
       console.log("Error loading wallets data", error);
@@ -40,23 +40,19 @@ const Wallet = () => {
    })()
 
   }, []);
+
+  
   
   
 
   useEffect(() => {
     (async() => {
-      console.log("Wallet if condition:- ", wallets[currentChain].length == 0);
-      console.log("Mnemonics value:- ", mnemonics.toString());
       if(wallets[currentChain].length == 0 && mnemonics){
       CreateSolAccount({ password: passwordRef.current, wallets, currentChain, setWallets, mnemonics });
       await setItem(WalletConst, wallets);
     }
     })()
   }, [mnemonics]);
-
-  useEffect(() => {
-    console.log("Wallet values:- ",wallets);
-  }, [wallets])
   
   
 
@@ -65,8 +61,8 @@ const Wallet = () => {
   }
 
 
-  if(IsOpen){
-    return <PasswordGate onClose={() => setIsOpen(false)}/>
+  if(isPasswordOpen){
+    return <PasswordGate onClose={() => setIsPasswordOpen(false)}/>
   }
 
   if(error) {

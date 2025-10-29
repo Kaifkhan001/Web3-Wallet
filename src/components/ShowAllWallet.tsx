@@ -12,7 +12,6 @@ const ShowAllWallet = ({ handleClose, chain }: { handleClose: () => void; chain:
     useEffect(() => {
     (async () => {
       const res = await getFullWalletValue({ chain, wallets });
-      console.log("Show wallet values:- ", res);
       if (res) setAllSolWallet(res.values);
       console.log("Res from the function:- ",res);
     })();

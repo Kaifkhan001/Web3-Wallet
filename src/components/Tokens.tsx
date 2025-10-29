@@ -38,7 +38,9 @@ const Tokens = () => {
     UsdPrice: 0
   });
 
+
   useEffect(() => {
+    if(wallets['SOL'].length == 0) return;
     (async() => {
       const sol = await getSolValue({ publicKey: wallets['SOL'][0].publicKey});
       if (sol) setSolValue(sol);
@@ -49,26 +51,24 @@ const Tokens = () => {
       const poly = await getPolyValue({ publicKey: wallets['POLY'][0].publicKey});
       if(poly) setPolyValue(poly);
     })()
-  }, [])
+  }, [wallets]);
+
+  if(wallets['SOL'].length == 0){
+    return <div className="flex w-full  items-center justify-center gap-2.5">
+            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="20" cy="20" r="15" stroke="#007bff" strokeWidth="3" fill="none" strokeDasharray="23.56" strokeDashoffset="11.78">
+                <animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="1s" repeatCount="indefinite" />
+                </circle>
+            </svg>
+            Loading..
+          </div>
+  }
   
   
   return (
     <div className="px-8 text-2xl">
      Tokens :-
      <div className="w-full min-h-32 border-[1px] border-white rounded-2xl  my-6 py-3 px-2 flex flex-col gap-3">
-       {/* <div className="w-full min-h-32 border-[1px] border-white rounded-2xl  my-6 py-3 px-2 flex flex-col gap-3">
-        {SOLarray && SOLarray.map((val, index) => (
-          <Slot 
-          key={index}
-          src="/sol.png" 
-          TokenName="SOL" 
-          TokenValue={val.coinBalance} 
-          CurrentPrice={`${val.UsdPrice}$`} 
-          TodayUpdate="+0.5$"
-          ismore
-          />
-        ))}
-       </div> */}
         <Slot src="/sol.png" TokenName="SOL" TokenValue={SolValue.coinBalance} CurrentPrice={`${SolValue.UsdPrice}`} TodayUpdate="+0.5$" isMoreThanOne={wallets['SOL'].length > 1 ? true : false} walletName={wallets['SOL'][0].label}/>
 
         <Slot src="/btc.png" TokenName="BTC" TokenValue={BtcValue.coinBalance} CurrentPrice={`${BtcValue.UsdPrice}`} TodayUpdate="+0.5$" isMoreThanOne={wallets['BTC'].length > 1 ? true : false}  walletName={wallets['BTC'][0].label}/>

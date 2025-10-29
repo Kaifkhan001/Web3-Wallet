@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { getItem } from "../utils/DbInteration";
 import { passwordConst } from "../utils/ConstValues";
 
-export default function PasswordGate({ onClose }: { onClose: () => void }) {
+export default function PasswordGate({ onClose, className, }: { onClose: () => void; className?: string; isPrKey?: boolean }) {
   const [input, setInput] = useState("");
   const [visible, setVisible] = useState(true);
   const [error, setError] = useState(false);
@@ -17,7 +17,6 @@ export default function PasswordGate({ onClose }: { onClose: () => void }) {
         const password = await getItem(passwordConst);
         console.log("Password: ", password);
         passFromDb.current = password as string;
-        console.log("Password got from indexedDB:- ", password);
     } catch (error) {
         toast.error("Error Fetching Password!!");
         console.log("Error while fetching the pass:- ", error);
@@ -52,8 +51,8 @@ export default function PasswordGate({ onClose }: { onClose: () => void }) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: "-100%", opacity: 0 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
-          className="flex flex-col items-center justify-center h-screen 
-            bg-black/80 text-white z-50 gap-8"
+          className={`flex absolute flex-col items-center justify-center h-screen 
+            bg-black/80 text-white z-50 gap-8 w-full ${className}`}
             >
             <h4 className="text-4xl ">Kaif Khan.</h4>
           <form onSubmit={handleVerify} className="bg-gray-900 p-6 rounded-2xl shadow-lg flex flex-col gap-4">

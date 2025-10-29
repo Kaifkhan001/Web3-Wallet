@@ -13,10 +13,11 @@ export default async function getPolyValue({ publicKey }: { publicKey : string})
     ]
     }
     );
-    const currentPolyVal =  await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=polygon-ecosystem-token&vs_currencies=usd");  
+    // const currentPolyVal =  await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=polygon-ecosystem-token&vs_currencies=usd");  
 
     const val = Number(res.data.result)/1e18;
-    const usdValue = currentPolyVal.data["polygon-ecosystem-token"].usd
+    const usdValue = 0.20
+    // currentPolyVal.data["polygon-ecosystem-token"].usd
 
     return {
         coinBalance: val,

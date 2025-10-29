@@ -27,6 +27,7 @@ export type globalValueType = {
 
 interface WalletContextType {
     mnemonics: string;
+    isPasswordOpen: boolean;
     password: string;
     currentChain: Chain;
     currentChainValue: CurrentChainValueType;
@@ -40,11 +41,13 @@ interface WalletContextType {
     setCurrentAccountIndex: (value: number) => void;
     setCurrentChainValue: (value: CurrentChainValueType) => void;
     setGlobalValue: (value: globalValueType) => void;
+    setIsPasswordOpen: (value: boolean) => void;
 }
 
 export const WalletContext = createContext<WalletContextType>({
     mnemonics: "",
     password: "",
+    isPasswordOpen: false,
     setPassword: () => {},
     setMnemonics: () => {},
     currentChain: 'SOL',
@@ -69,7 +72,8 @@ export const WalletContext = createContext<WalletContextType>({
         UsdPrice: 0
     },
     setCurrentChainValue: () => {},
-    setGlobalValue: () => {}
+    setGlobalValue: () => {},
+    setIsPasswordOpen: () => {}
 
 })
 

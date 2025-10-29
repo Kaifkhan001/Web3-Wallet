@@ -9,10 +9,8 @@ const BalanceCard = () => {
   useEffect(() => {
     (async() => {
       const res = await GetGlobalValue({ wallets });
-      console.log("GLobal Value from the function:- ", res);
       if(!res) return
       const val = res['SOL'] + res['BTC'] + res['ETH'] + res['POLY'];
-      console.log("val in the balance card:- ", val);
       if (res) setGlobalValue(val);
     })()
   }, [wallets])

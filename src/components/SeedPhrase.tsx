@@ -18,7 +18,6 @@ const SeedPhrase = () => {
      (async() => {
     const mnemonic = generateMnemonic();
     setMnemonics(mnemonic);
-    console.log("Mnemonics value in seed phrase:- ", mnemonic);
     await setItem(MnemonicsConst, mnemonic)
       console.log("Successfully");
      })()

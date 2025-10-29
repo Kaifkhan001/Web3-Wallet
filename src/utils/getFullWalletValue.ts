@@ -40,14 +40,12 @@ export default async function getFullWalletValue({
 
     const promises = selectedWallets.map(async (account: Account) => {
       const res = await valueGetter!({ publicKey: account.publicKey });
-      if(valueGetter == getPolyValue) console.log("In case of poly:- ", res);
       if (res) ValuesArray.push(res);
     });
 
     await Promise.all(promises);
 
     const totalUsdValue = ValuesArray.reduce((sum, item) => sum + item.UsdPrice, 0);
-    console.log("Bc Values in array:- ", ValuesArray);
     return { values: ValuesArray, totalUsdValue };
   } catch (error) {
     console.log("Something went wrong while fetching wallet values:", error);

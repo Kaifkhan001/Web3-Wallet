@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import ShortenKeys from "../utils/shortenKey";
 import { FaCheck, FaRegCopy } from "react-icons/fa6";
+import { BsThreeDotsVertical } from "react-icons/bs";
+
 import { toast } from "sonner";
 import useWallet, { type Account, type CurrentChainValueType } from "../context/UseWallet";
 import AddWallet from "./AddWallet";
@@ -8,6 +10,10 @@ import { getSolValue } from "../utils/getSolValue";
 import getEthValue from "../utils/getEthValue";
 import getBTCValue from "../utils/getBTCValue";
 import getPolyValue from "../utils/getPolyValue";
+import ShowPrivateKey from "./ShowPrivateKey";
+import { setItem } from "../utils/DbInteration";
+import { WalletConst } from "../utils/ConstValues";
+import WarningForDeleteKey from "./WarningForDeleteKey";
 
 export type ChainType = 'SOL' | 'BTC' | 'ETH' | 'POLY';
 
@@ -17,21 +23,37 @@ const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isChainOpen, setIsChainOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
+  // const [showPasswordBox, setshowPasswordBox] = useState(false);
+  const [showPrivateKey, setshowPrivateKey] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const  { wallets, setCurrentChainValue, currentChain, setCurrentChain } = useWallet();
+  const  { wallets, setCurrentChainValue, currentChain, setCurrentChain, setWallets } = useWallet();
+  const [warningForDelete, setwarningForDelete] = useState(false);
   const LogoArray = ['/sol.png', '/btc.png', '/eth.png', '/poly.png'];
+  const [currentEncPrivateKey, setCurrentEncprivateKey] = useState<string | null>(null);
+  const [currentDelAccount, setCurrentDelAccount] = useState<string | null>(null);
 
   const handleClick = () => {
     setIsVisible(prev => !prev);
   }
 
+  const handleShowPrivateKey = (e: string) => {
+    // setIsPasswordOpen(true);
+    setCurrentEncprivateKey(e);
+    setshowPrivateKey(true);
+    setIsChainOpen(false);
+    setIsOpen(false)
+
+  }
+  
   useEffect(() => {
-   console.log("IsOpen, IsChainOpen and IsVisible:- ", isOpen, isChainOpen, isVisible);
-  }, [isOpen, isChainOpen, isVisible]);
+    console.log("private Key Showinf box:- ", showPrivateKey);
+    console.log("Current enc private key:- ", currentEncPrivateKey);
+  }, [showPrivateKey]);
   
 
   useEffect(() => {
-    console.log("Wallet value in state var:- ", wallets);
+    if(wallets['SOL'].length == 0) return;
     setCurrentKey(wallets[currentChain][0].publicKey);
   }, [wallets])
   
@@ -44,6 +66,7 @@ const Dropdown = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
         setIsChainOpen(false);
+        setOpenMenuIndex(null);
       }
     };
 
@@ -52,11 +75,39 @@ const Dropdown = () => {
   }, []);
 
   useEffect(() => {
+    if(wallets['SOL'].length == 0) return;
       setCurrentKey(wallets[currentChain][0].publicKey);
-  }, [currentChain])
+  }, [currentChain, wallets]);
+
+  const handleThreeDotClick = (e: string) => {
+    console.log(`Publick of the of the chain:- ${currentChain} :- ${e}`);
+  }
+  const deleteWallet = () => {
+    if (wallets[currentChain]) {
+  const newWallet = wallets[currentChain].filter(
+    wallet => wallet.publicKey !== currentDelAccount
+  );
+  
+  setWallets({
+    ...wallets,
+    [currentChain]: newWallet
+  });
+  setwarningForDelete(false);
+  setCurrentDelAccount(null);
+  toast.success("Wallet deleted successfully");
+    }
+  }
+
+  useEffect(() => {
+    (async() => {
+     await setItem(WalletConst, wallets)
+    })()
+  }, [wallets])
+  
   
 
   useEffect(() => {
+    if(wallets['SOL'].length == 0) return;
    (async() => {
      switch(currentChain){
       case 'SOL': 
@@ -70,8 +121,6 @@ const Dropdown = () => {
                       UsdPrice: val.UsdPrice
                     }
                     setCurrentChainValue(data);
-                    console.log("value in the then part of the promise:- ", val);
-                    console.log("Current key :- ", CurrentKey);
                   });
                   break;
       case 'ETH': console.log("Eth function is going to be called");
@@ -123,12 +172,30 @@ const Dropdown = () => {
 
     }
    })()
-  }, [CurrentKey]);
+  }, [CurrentKey, wallets]);
+
+  // if(showPasswordBox){
+  //   return <PasswordGate className="absolute" onClose={() => {
+  //     setshowPasswordBox(false);
+  //     setshowPrivateKey(true);
+  //   }}/>
+  // }
   
+  // if(showPrivateKey){
+  //   return <ShowPrivateKey onClick={() => setshowPrivateKey(false)}/>
+  // }
   
   return (
     <div ref={dropdownRef} className="flex items-center justify-center relative">
       {isVisible && <AddWallet onClick={handleClick}/>}
+      {showPrivateKey && currentEncPrivateKey && <ShowPrivateKey onClose={() => {
+        setshowPrivateKey(false);
+        setCurrentEncprivateKey(null);
+      }} encprivateKey={currentEncPrivateKey}/>}
+      {warningForDelete && <WarningForDeleteKey handleDelete={deleteWallet} handleCancel={() => {
+        setwarningForDelete(false);
+        setCurrentDelAccount(null);
+      }}/>}
       <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-[1px] focus:outline-none focus:ring-blue-300 font-medium rounded-l-lg text-sm px-5 py-2.5 text-center inline-flex items-center cursor-pointer border-r-[2px] border-blue-200" onClick={() => {
         setIsChainOpen(prev => !prev);
         setIsOpen(false);
@@ -153,6 +220,7 @@ const Dropdown = () => {
         onClick={() => {
           setIsOpen((prev) => !prev);
           setIsChainOpen(false);
+          setOpenMenuIndex(null);
         }}
         className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-[1px] focus:outline-none focus:ring-blue-300 font-medium rounded-r-lg text-sm px-5 py-2.5 text-center inline-flex items-center cursor-pointer"
         type="button"
@@ -181,6 +249,7 @@ const Dropdown = () => {
               <li onClick={async() => {
                 setCurrentChain(val);
                 setIsChainOpen(false);
+                setOpenMenuIndex(null);
               }} key={idx} className="flex items-center justify-between py-1 px-3 cursor-pointer">
                 <img src={LogoArray[idx]} alt="cryptoimg" className="w-8 h-8" />
                 <div>{val}</div>
@@ -196,14 +265,22 @@ const Dropdown = () => {
            {wallets[currentChain].length == 0 ? (
             <div className="px-2 py-1">Empty Wallet..</div>
            ) : (
-             wallets[currentChain].map((acc: Account) => (
-              <li key={acc.privateKey} className={`flex items-center justify-between py-1 px-2 my-2 gap-3 ${CurrentKey == acc.publicKey ? "outline-[2px] outline-blue-400 rounded-lg" : ""}`} onClick={() => {
-                setCurrentKey(acc.publicKey);
-                setIsOpen(false);
-              }}
+            wallets[currentChain].map((acc: Account, index: number) => (
+              <li
+                onClick={() => {
+                  setCurrentKey(acc.publicKey);
+                  setIsOpen(false);
+                  setIsChainOpen(false);
+                }}
+                key={acc.publicKey}
+                className={`relative flex items-center justify-between py-1 px-2 my-2 gap-3 ${
+                  CurrentKey === acc.publicKey ? "outline-[2px] outline-blue-400 rounded-lg" : ""
+                }`}
               >
-                <div className="px-2 text-sm flex-nowrap">{acc.label.length > 5 ? (acc.label.slice(0,5) + '...'): (acc.label)}</div>
-                <div>{ShortenKeys(acc.publicKey)}</div>
+                <div  className="px-2 text-sm flex-nowrap">
+                  {acc.label.length > 5 ? acc.label.slice(0, 5) + "..." : acc.label}
+                </div>
+
                 <div
                   className="flex gap-1 cursor-pointer hover:text-gray-400"
                   onClick={async () => {
@@ -211,20 +288,55 @@ const Dropdown = () => {
                     toast.success("Key Copied to clipboard!");
                     setCopiedKey(acc.publicKey);
                     setTimeout(() => setCopiedKey(null), 2000);
-                    console.log("Key in conclik:- ", ShortenKeys(acc.publicKey))
+                    setOpenMenuIndex(null);
                   }}
                 >
-                  {/* {ShortenKeys(acc.publicKey)}{" "} */}
                   <span title="copy">
                     {copiedKey === acc.publicKey ? <FaCheck /> : <FaRegCopy />}
                   </span>
                 </div>
+
+                <div>{ShortenKeys(acc.publicKey)}</div>
+
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation(); 
+                    setOpenMenuIndex(openMenuIndex === index ? null : index);
+                    handleThreeDotClick(acc.publicKey);
+                    
+                  }}
+                  className="cursor-pointer text-white"
+                >
+                  <BsThreeDotsVertical />
+                </div>
+
+                {/* Mini menu */}
+                {openMenuIndex === index && (
+                  <div className="absolute right-0 top-8 bg-gray-800 text-white rounded-lg shadow-md min-w-32 z-10">
+                    <button className="w-full px-4 py-2 text-left hover:bg-gray-700 font-semibold" onClick={() => {
+                      handleShowPrivateKey(acc.privateKey);
+                    }}>
+                      Show Private Key
+                    </button>
+                    <button
+                    onClick={() => {
+                      setwarningForDelete(true);
+                      setCurrentDelAccount(acc.publicKey);
+                      setIsChainOpen(false);
+                      setIsOpen(false);
+                    }}
+                    className="w-full px-4 py-2 text-left hover:bg-gray-700 text-red-800 font-semibold">
+                      Delete
+                    </button>
+                  </div>
+                )}
               </li>
             ))
            )}
            <li className="flex items-center justify-between py-3 px-2 text-blue-600 text-sm font-semibold cursor-pointer" onClick={() => {
             setIsOpen(false);
             setIsVisible(true);
+            setOpenMenuIndex(null);
            }}>+ Add a new {currentChain} Wallet.</li>
           </ul>
         </div>

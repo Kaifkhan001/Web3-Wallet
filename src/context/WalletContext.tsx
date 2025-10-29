@@ -7,6 +7,7 @@ import type { Wallets } from "./UseWallet";
 
 export const WalletProvider = ({ children }: { children : React.ReactNode}) => {
     const [mnemonics, setMnemonics] = useState("");
+    const [isPasswordOpen, setIsPasswordOpen] = useState(false);
     const [password, setPassword] = useState('');
     const [currentChain, setCurrentChain] = useState<Chain>('SOL');
     const [currentChainValue, setCurrentChainValue] = useState<CurrentChainValueType>({
@@ -27,7 +28,7 @@ export const WalletProvider = ({ children }: { children : React.ReactNode}) => {
         POLY: 0
     });
 
-    return <WalletContext.Provider value={{ mnemonics, setMnemonics, password, setPassword, currentChain, setCurrentChain, wallets, setWallets, currentAccountIndex, setCurrentAccountIndex, currentChainValue, setCurrentChainValue, globalValue, setGlobalValue }}>
+    return <WalletContext.Provider value={{ mnemonics, setMnemonics, password, setPassword, currentChain, setCurrentChain, wallets, setWallets, currentAccountIndex, setCurrentAccountIndex, currentChainValue, setCurrentChainValue, globalValue, setGlobalValue, isPasswordOpen, setIsPasswordOpen }}>
         {children}
     </WalletContext.Provider>
 }

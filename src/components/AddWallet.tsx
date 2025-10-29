@@ -88,10 +88,10 @@ const AddWallet = ({ onClick } : { onClick: () => void;}) => {
           >
             {/* Attach the ref HERE */}
             <motion.div
-              className="relative w-3/4 max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-900 dark:border-gray-700"
+              className="relative w-3/4 max-w-sm p-4 px-2 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-900 dark:border-gray-700"
               variants={variants}
             >
-              <form onSubmit={handleCreate} className="space-y-6" action="#">
+              <form onSubmit={handleCreate} className="space-y-6 w-full" action="#">
                 <h5 className="pt-8 w-full flex text-center text-2xl font-semibold items-center justify-center relative ">
                 Create a{" "}
                 <span className="relative  flex items-center justify-center px-2 hover:text-gray-500">

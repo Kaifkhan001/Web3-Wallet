@@ -11,7 +11,6 @@ export default async function GetGlobalValue({ wallets }: { wallets: Wallets}){
        const eth = await getFullWalletValue({ chain: 'ETH', wallets });
        Values['ETH'] = eth?.totalUsdValue ?? 0;
        const poly = await getFullWalletValue({ chain: 'POLY', wallets });
-       console.log("Bhencho::- ", poly?.totalUsdValue);
        Values['POLY'] = poly?.totalUsdValue ?? 0;
         return Values;
     } catch (error) {

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const ETH_PRICE_URL = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd";
+// const ETH_PRICE_URL = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd";
 
 export  default async function getEthValue({ publicKey } : { publicKey: string}): Promise<{ coinBalance: number, UsdPrice: number} | null>  {
    try {
@@ -11,10 +11,11 @@ export  default async function getEthValue({ publicKey } : { publicKey: string})
         "params": [publicKey, "latest"]
     }); 
 
-    console.log("Result:- ", res.data);
     const ethBalance = Number(res.data.result)/1e18;
-    const usdRes = await axios.get(ETH_PRICE_URL);
-    const usdValue = usdRes.data.ethereum.usd * ethBalance;
+    const usdRes = 4000
+    // await axios.get(ETH_PRICE_URL);
+    const usdValue = usdRes * ethBalance;
+    // .data.ethereum.usd
 
     return {
         coinBalance: ethBalance,

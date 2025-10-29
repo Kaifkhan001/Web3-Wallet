@@ -1,10 +1,10 @@
 import { Connection, PublicKey } from '@solana/web3.js';
-import axios from 'axios';
+// import axios from 'axios';
 
 // Define a stable, publicly available RPC endpoint
 // You can use a mainnet endpoint or a dedicated provider like Helius, Alchemy, etc.
 const SOLANA_RPC_ENDPOINT = 'https://mainnet.helius-rpc.com/?api-key=0cc958f5-a505-4e82-8bbf-0bb77bce8a1e';
-const CRYPTO_PRICE_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd'; 
+// const CRYPTO_PRICE_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd'; 
 
 /**
  * Fetches the SOL balance for a given public key.
@@ -13,7 +13,6 @@ const CRYPTO_PRICE_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=sola
  */
 export async function getSolValue({ publicKey } : { publicKey: string}): Promise<{ coinBalance: number, UsdPrice: number} | null> {
     try {
-        console.log("Publick key got from the somewhere:- ", publicKey)
         // 1. Establish a connection to the Solana cluster
         const connection = new Connection(SOLANA_RPC_ENDPOINT);
 
@@ -26,9 +25,8 @@ export async function getSolValue({ publicKey } : { publicKey: string}): Promise
         // 4. Convert lamports to SOL
         const solBalance = lamports / 1_000_000_000;
 
-        const res = await axios.get(CRYPTO_PRICE_URL);
-        console.log("value is getSol method:- ", solBalance, res.data.solana.usd)
-        const solInUsd = res.data.solana.usd * solBalance;
+        const res = 200;
+        const solInUsd = res * solBalance;
         return {coinBalance: solBalance, UsdPrice: solInUsd };
 
     } catch (error) {
