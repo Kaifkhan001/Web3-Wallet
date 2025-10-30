@@ -36,7 +36,7 @@ interface WalletContextType {
     setPassword: (value: string) => void;
     setCurrentChain: (value: Chain) => void;
     wallets: Wallets;
-    setWallets: (value: Wallets) => void;
+    setWallets: React.Dispatch<React.SetStateAction<Wallets>>;
     currentAccountIndex: number;
     setCurrentAccountIndex: (value: number) => void;
     setCurrentChainValue: (value: CurrentChainValueType) => void;

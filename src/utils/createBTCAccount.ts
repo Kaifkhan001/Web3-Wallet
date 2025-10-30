@@ -6,13 +6,16 @@ import encryptKey from "./encryptKey";
 import { type Chain, type Wallets } from "../context/UseWallet";
 import { setItem } from "./DbInteration";
 import { WalletConst } from "./ConstValues";
+// import { setItem } from "./DbInteration";
+// import { WalletConst } from "./ConstValues";
 
 const bip32 = BIP32Factory(ecc);
 
 
-export default async function CreateBTCAccount({ password, label, wallets, currentChain, mnemonics, setWallets }: {password: string, label?: string, wallets: Wallets, currentChain: Chain, mnemonics: string, setWallets: (value: Wallets) => void}){
+export default async function CreateBTCAccount({ password, label, wallets, currentChain, mnemonics, setWallets }: {password: string, label?: string, wallets: Wallets, currentChain: Chain, mnemonics: string, setWallets: React.Dispatch<React.SetStateAction<Wallets>>}){
     // Extracting needed things
     // const { wallets, currentChain, mnemonics, setWallets } = useWallet();
+    console.log("creating btc wallet:- ", currentChain);
     const accountNumber = wallets[currentChain].length;
         // Convert seed into mnemonics
     const seed = mnemonicToSeedSync(mnemonics);
@@ -41,15 +44,13 @@ export default async function CreateBTCAccount({ password, label, wallets, curre
         privateKey: encryptKey(privateKeyWIF, password),
         label: label ?? `Account${accountNumber}`
     }
-
-    const newWallet = {
-        ...wallets,
-        [currentChain] : [...wallets[currentChain], DBdata]
-    };
-
-    setWallets(newWallet);
-    await setItem(WalletConst, newWallet);
-
-    console.log("BTC wallet:- ", DBdata);
-
+    console.log("wallet before:-in btc ", wallets);
+        setWallets((prev: Wallets): Wallets => {
+        const newWallets: Wallets = {
+          ...prev,
+          [currentChain]: [...prev[currentChain], DBdata],
+        };
+        setItem(WalletConst, newWallets);
+        return newWallets;
+        });
 } 

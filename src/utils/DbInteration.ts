@@ -45,6 +45,7 @@ export async function getItem<T>(id: string): Promise<T | null>{
          if(req.result){
             resolve(JSON.parse(req.result.value));
          }else{
+            console.log("Rejected req for :- ", id);
             reject(new Error(`No record found for id: ${id}`))
          }
       }

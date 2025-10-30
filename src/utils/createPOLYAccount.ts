@@ -2,12 +2,15 @@
 import { type Chain, type Wallets } from '../context/UseWallet';
 import { WalletConst } from './ConstValues';
 import { setItem } from './DbInteration';
+// import { WalletConst } from './ConstValues';
+// import { setItem } from './DbInteration';
 import encryptKey from './encryptKey';
 import { Wallet, HDNodeWallet, Mnemonic } from 'ethers';
 
 
-export default async function CreatePolyAccount({ password, label, wallets, currentChain, mnemonics, setWallets }: {password: string, label?: string, wallets: Wallets, currentChain: Chain, mnemonics: string, setWallets: (value: Wallets) => void}) {
+export default async function CreatePolyAccount({ password, label, wallets, currentChain, mnemonics, setWallets }: {password: string, label?: string, wallets: Wallets, currentChain: Chain, mnemonics: string, setWallets: React.Dispatch<React.SetStateAction<Wallets>>}) {
     const accountNumber = wallets[currentChain].length;
+    console.log("Creating a poly wallet:- ", currentChain);
 
     if (!mnemonics || typeof mnemonics !== "string") {
     console.error("Invalid or missing mnemonic:", mnemonics);
@@ -30,11 +33,13 @@ export default async function CreatePolyAccount({ password, label, wallets, curr
         label: label ?? `Account${wallets[currentChain].length}`
     }
 
-    const newWallets = {
-        ...wallets,
-        [currentChain]: [...wallets[currentChain], DBdata],
-    }
-     setWallets(newWallets);
-     await setItem(WalletConst, newWallets);
+     setWallets((prev: Wallets): Wallets => {
+    const newWallets: Wallets = {
+        ...prev,
+        [currentChain]: [...prev[currentChain], DBdata],
+    };
+    setItem(WalletConst, newWallets);
+    return newWallets;
+    });
 
     }
